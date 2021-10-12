@@ -313,11 +313,12 @@ public class TodoList {
 		// TODO Auto-generated method stub
 		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
 		Statement stmt;
-		System.out.println(orderby);
+		//System.out.println(ordering);
 		try {
 			stmt= conn.createStatement();
-			//String sql="SELECT * FROM list ORDER BY" + orderby;
-			String sql="SELECT * FROM list";
+			String sql="SELECT * FROM list ORDER BY " + orderby;
+			//String sql="SELECT * FROM list";
+			System.out.println(sql);
 			if(ordering == 0)
 				sql +=" desc";
 			ResultSet rs = stmt.executeQuery(sql); //에러?!!!!!!!
@@ -336,7 +337,7 @@ public class TodoList {
 		}catch (Exception e) {
 				e.printStackTrace();
 			}
-		return null;
+		return list;
 	}
 	
 }
