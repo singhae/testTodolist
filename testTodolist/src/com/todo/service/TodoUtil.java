@@ -36,10 +36,10 @@ public class TodoUtil {
 				+ "제목을 입력하십시오 >");
 		title = sc.next().trim();
 		
-		/*if (l.isDuplicate(title)) { //만약 타이틀을 이즈듀플리케이트 함수에서 실행 된다면 
+		if (l.isDuplicate(title)) { //만약 타이틀을 이즈듀플리케이트 함수에서 실행 된다면 
 			System.out.printf("제목이 중복됩니다!"); // 타이틀은 복사되지못한다는 출력 
 			return;
-		}*/
+		}
 		
 		System.out.println("카테고리를 입력하십시오 >");
 		category = sc.next().trim(); //타이틀에 스트링 입력 
@@ -96,7 +96,7 @@ public class TodoUtil {
 		System.out.println("[항목수정]\n"
 				+ "수정할 항목의 번호를 입력하시오 > ");
 		int num = sc.nextInt();
-		//System.out.println((num) + ". " + l.getItem(num-1).toString());
+		
 		
 		System.out.println("새 제목을 입력하시오 > ");  //출력 
 		String new_title = sc.next().trim(); //뉴타이틀 입력받기 
@@ -206,33 +206,17 @@ public class TodoUtil {
 	public static void findList(TodoList l, String word) {
 		// TODO Auto-generated method stub
 		int count = 0;
-		/*for (int i=0; i<l.getList().size(); i++) {
-			if(l.getItem(i).getTitle().contains(word)||l.getItem(i).getDesc().contains(word)) {
-				System.out.println((i+1) + ". " + l.getItem(i).toString());
-				count++;
-			}*/
+	
 		for(TodoItem item : l.getList(word)) {
 			System.out.println(item.toString());
 			count++;
 		}	
 		
-		//System.out.print(l.getList().size());
+		
 		System.out.printf("총 %d개의 항복을 찾았습니다.\n", count);
 	}
 	
-	/*public static void findCategory(TodoList l, String word) {
-		// TODO Auto-generated method stub
-		int count = 0;
-		for (int i=0; i<l.getList().size(); i++) {
-			if(l.getItem(i).getCategory().contains(word)) {
-				System.out.println((i+1) + ". " + l.getItem(i).toString());
-				count++;
-			}
-		}	
-		
-		//System.out.print(l.getList().size());
-		System.out.printf("총 %d개의 항복을 찾았습니다.\n", count);
-	}*/
+	
 	public static void findCategory(TodoList l, String word) {
 		// TODO Auto-generated method stub
 		int count = 0;
@@ -244,23 +228,7 @@ public class TodoUtil {
 		System.out.printf("총 %d개의 항복을 찾았습니다.\n", count);
 	}
 
-	/*public static void listCateAll(TodoList l) {
-		// TODO Auto-generated method stub
-		Set<String> clist = new HashSet<String>();
-		
-		for (TodoItem t : l.getList()) {
-			clist.add(t.getCategory());
-			
-		}
-		Iterator it = clist.iterator();
-		while (it.hasNext()) {
-			String s = (String)it.next();
-			System.out.print(s);
-			if(it.hasNext()) System.out.print(" / ");
-		}
-		System.out.printf("\n총 %d개의 카테고리가 등록되어 있습니다. \n", clist.size());
-	}
-*/
+	
 		public static void listCateAll(TodoList l) {
 		
 			int count =0;

@@ -84,11 +84,14 @@ public class TodoList {
 		return count;
 	}
 	
-	public void editItem(TodoItem t, TodoItem updated) { //
+	/*public void editItem(TodoItem t, TodoItem updated) { //
 		int index = list.indexOf(t); 
 		list.remove(index);
 		list.add(updated);
-	}
+	}*/
+	/*public int editItem(int num) {
+		String sql = "update 
+	}*/
 
 
 	public ArrayList<TodoItem> getList() {
@@ -110,8 +113,10 @@ public class TodoList {
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
+				//add
 				
 			}
+			rs.close();
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -122,10 +127,11 @@ public class TodoList {
 	public ArrayList<TodoItem> getList(String word) {
 		// TODO Auto-generated method stub
 		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
-		PreparedStatement pstmt = null; //initialize 하라고해서 함!!! 
+		PreparedStatement pstmt; //initialize 하라고해서 함!!! 
 		word = "%" + word + "%";
 		try {
 			String sql = "SELECT * FROM list WHERE title like ? or memo like ?";
+			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, word);
 			pstmt.setString(2, word);
 			ResultSet rs= pstmt.executeQuery();
@@ -141,13 +147,19 @@ public class TodoList {
 				t.setCurrent_date(current_date);
 				list.add(t);
 				
+				
 			}
+			rs.close();
 			pstmt.close();
 			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
+	}
+	private void setString(int i, String word) {
+		// TODO Auto-generated method stub
+		
 	}
 	public void sortByName() {
 		//System.out.println("제목순으로 정렬하였습니다.");
@@ -181,27 +193,33 @@ public class TodoList {
 		}
 		return false; // 같지 않으면 거짓 리턴 
 	}*/
-	public boolean isDuplicate(String title) {  
+	public boolean isDuplicate(String title) {  // 제목 중복되는지 ㅏ안되는지 확인 
 		PreparedStatement pstmt;
 		int count = 0;
 			try {
 				
-				String sql = "SELECT count(id) FROM list where title =?;";
+				String sql = "SELECT title, COUNT(*) FROM list GROUP BY title;"; //숫자 반환해줌..중복된거만큼 숫자! 
 				pstmt = conn.prepareStatement(sql);
-				//TodoItem t = new TodoItem(title);
-				pstmt.setString(1,title);
-				ResultSet rs = pstmt.executeQuery(sql);
-				while(rs.next())
-					count = rs.getInt("count(id)");
 				
+				ResultSet rs = pstmt.executeQuery(); //sql 왜 뺴줘야하노 
+				
+				//System.out.print(rs);
+				
+				while(rs.next()) {
+					
+					count =rs.getInt("count(*)");
+				
+					//count++;
+				}
+				rs.close();
 				pstmt.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		if(count >= 1)
-			return true; //불리안이니까 false 면중복이라는 소린데..count 는 어디다가 쓰노...
-		else
-			return false;
+			if(count >= 2)
+				return true;
+			else	
+				return false;
 		
 		
 	}
@@ -218,6 +236,7 @@ public class TodoList {
 			ResultSet rs = stmt.executeQuery(sql);
 			rs.next();
 			count = rs.getInt("count(id)");
+			rs.close();
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -274,6 +293,7 @@ public class TodoList {
 			
 				list.add(category);
 			}
+			rs.close();
 			stmt.close();
 			
 		}catch (Exception e) {
@@ -301,7 +321,7 @@ public class TodoList {
 				TodoItem t = new TodoItem(title, description, category, due_date);
 				list.add(t); //이부분 왜.... 
 			}
-			
+			rs.close();
 			pstmt.close();
 			
 		}catch (Exception e) {
@@ -313,12 +333,11 @@ public class TodoList {
 		// TODO Auto-generated method stub
 		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
 		Statement stmt;
-		//System.out.println(ordering);
+		
 		try {
 			stmt= conn.createStatement();
 			String sql="SELECT * FROM list ORDER BY " + orderby;
-			//String sql="SELECT * FROM list";
-			System.out.println(sql);
+			
 			if(ordering == 0)
 				sql +=" desc";
 			ResultSet rs = stmt.executeQuery(sql); //에러?!!!!!!!
@@ -333,7 +352,7 @@ public class TodoList {
 				TodoItem t = new TodoItem(title, description, category, due_date);
 				list.add(t);
 			}
-			
+			rs.close();
 		}catch (Exception e) {
 				e.printStackTrace();
 			}
