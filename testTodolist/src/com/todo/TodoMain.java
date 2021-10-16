@@ -80,7 +80,7 @@ public class TodoMain {
 				String word = sc.next().trim();
 				TodoUtil.findList(l,word);
 				break;
-			case "find_cate":
+			case "find_cate": //
 				String wordofcate = sc.next();
 				TodoUtil.findCategory(l,wordofcate);
 				break;
