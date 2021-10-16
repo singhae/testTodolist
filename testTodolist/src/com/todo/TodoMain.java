@@ -85,6 +85,13 @@ public class TodoMain {
 				TodoUtil.findCategory(l,wordofcate);
 				break;
 				
+			case "comp":
+				int value = sc.nextInt();
+				TodoUtil.completeItem(l,value);
+				break;
+			case "ls_comp":
+				TodoUtil.listCompAll(l);
+				break;
 			case "exit": 
 				quit = true; 
 				

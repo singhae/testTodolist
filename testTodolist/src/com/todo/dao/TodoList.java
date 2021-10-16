@@ -358,6 +358,58 @@ public class TodoList {
 			}
 		return list;
 	}
+	public int completeItem(int value) { //업데이트만 해주면 된다 , 사실 아이디의 이즈 컴플리티트를 1로 바까주는거야 ! 
+		// TODO Auto-generated method stub
+		String sql = "UPDATE list SET is_completed = 1 WHERE id = ?"; //??id 값 안받아와도 되겟지?
+		PreparedStatement pstmt;
+		int count = 0;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, value);
+			//pstmt.setInt(1, id);
+			count = pstmt.executeUpdate();
+			pstmt.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return count; //1이 되면 
+		
+	}
+	public ArrayList<TodoItem> getCompList() {
+		// TODO Auto-generated method stub
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		PreparedStatement pstmt; //initialize 하라고해서 함!!! 
+		
+		try {
+			String sql = "SELECT * FROM list WHERE is_completed=1";
+			pstmt = conn.prepareStatement(sql);
+			//pstmt.setInt(1, value);
+			
+			ResultSet rs= pstmt.executeQuery();
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				String category = rs.getString("category");
+				String title = rs.getString("title");
+				String desc = rs.getString("memo");
+				String due_date = rs.getString("due_date");
+				String current_date = rs.getString("current_date");
+				int is_completed = rs.getInt("is_completed");
+				TodoItem t = new TodoItem(title, desc, category, due_date,is_completed); //todoitem 수정 
+				t.setId(id);
+				t.setCurrent_date(current_date);
+				//t.setIs_completed(is_completed);
+				list.add(t);
+				
+				
+			}
+			rs.close();
+			pstmt.close();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 	
 }
 

@@ -150,6 +150,7 @@ public class TodoUtil {
 		
 		
 	}
+	
 	public static void saveList(TodoList l, String filename) {
 		
 			try {
@@ -239,7 +240,30 @@ public class TodoUtil {
 		
 		System.out.printf("\n총 %d개의 카테고리가 등록되어 있습니다. \n", count);
 	}
-	
+
+		public static void completeItem(TodoList l,int value) {
+			// TODO Auto-generated method stub
+			//Scanner sc = new Scanner(System.in);
+			
+			if(l.completeItem(value)>0)
+				for (TodoItem item : l.getCompList()) {  //TodoItem > String 으로 고치래 
+					System.out.println(item.toCompString());
+				}
+			System.out.println("완료하였습니다. ");
+			
+			
+		}
+		public static void listCompAll(TodoList l) { //수정 하기 
+						
+			System.out.println("[전체목록, 총" + l.getCompList().size() + "개]");
+								
+							
+			for (TodoItem item : l.getCompList()) {  //TodoItem > String 으로 고치래 
+						System.out.println(item.toCompString());
+			}
+				
+				
+		}
 
 	
 		
