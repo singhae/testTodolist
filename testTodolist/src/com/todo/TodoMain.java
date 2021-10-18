@@ -71,7 +71,14 @@ public class TodoMain {
 			case "ls_cate":
 				TodoUtil.listCateAll(l);
 				break;
-				
+			case "ls_impor": 
+				System.out.println("중요도순으로 정렬합니다.."); //추가 
+				TodoUtil.listAll(l,"important",0); 
+				break;
+			case "ls_impor_desc": 
+				System.out.println("덜 중요한 순으로 정렬합니다.."); //추가 
+				TodoUtil.listAll(l,"important",1); 
+				break;
 			case "help":
 				Menu.displaymenu();
 				break;
@@ -91,6 +98,20 @@ public class TodoMain {
 				break;
 			case "ls_comp":
 				TodoUtil.listCompAll(l);
+				break;
+			case "ls_notcomp":
+				TodoUtil.listNotCompAll(l);
+				break;
+			case "ls_place":
+				TodoUtil.listPlace(l);
+				break;
+			case "find_place":
+				String wordplace = sc.next();
+				TodoUtil.findPlace(l,wordplace);
+				break;
+			case "import_notcomp":
+				String impor = sc.next().trim();
+				TodoUtil.listImport_Not(l,impor);
 				break;
 			case "exit": 
 				quit = true; 

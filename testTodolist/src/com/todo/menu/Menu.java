@@ -12,9 +12,17 @@ public class Menu {
         System.out.println("ls_name_asc - 제목순으로 정렬"); //이름을 오름차순으로 정렬 
         System.out.println("ls_name_desc - 제목역순 정렬"); // 내림차순으로 정렬 
         System.out.println("ls_date - 날짜순 정렬"); //날짜순으로 정렬 
+        System.out.println("ls_impor - 중요도순 정렬");
+        System.out.println("ls_impor_desc - 덜 중요한 순으로 정렬");
         System.out.println("find - 제목, 내용에서 키워드 찾기 ");
         System.out.println("find_cate - 카테고리 키워드 찾기 ");
         System.out.println("ls_cate - 카테고리로 정렬");
+        System.out.println("comp - 완료미션체크하기 ");
+        System.out.println("ls_comp - 완료한 목록 정렬 ");
+        System.out.println("ls_notcomp- 미완료 목록 정렬 ");
+        System.out.println("import_notcomp- 중요도별 미완료 목록 정렬 ");
+        System.out.println("ls_place - 장소 정렬");
+        System.out.println("find_place - 장소 찾기! ");
         System.out.println("exit - 종료 "); //종료키를 선택 
         System.out.println("Enter your choice >"); //너의 선택을 입력해라 
     }

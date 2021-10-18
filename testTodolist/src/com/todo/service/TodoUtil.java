@@ -28,13 +28,13 @@ public class TodoUtil {
 
 	public static void createItem(TodoList l) { // ㅇ아이템 만드는 함수 
 		
-		String category,title, desc,due_date;  //타이틀 디스크립션 선언 
+		String category,title, desc,due_date,place,important;  //타이틀 디스크립션 선언 
 		Scanner sc = new Scanner(System.in); // 입력 받고 
 		
 		System.out.println("\n" //출력 
 				+ "[항목추가]\n" 
 				+ "제목을 입력하십시오 >");
-		title = sc.next().trim();
+		title = sc.nextLine().trim();
 		
 		if (l.isDuplicate(title)) { //만약 타이틀을 이즈듀플리케이트 함수에서 실행 된다면 
 			System.out.printf("제목이 중복됩니다!"); // 타이틀은 복사되지못한다는 출력 
@@ -49,10 +49,16 @@ public class TodoUtil {
 		System.out.println("내용을 입력하십시오 >"); // 디스크립션을 쳐라. 출력 
 		desc = sc.nextLine().trim(); //받은거 디스크립에 넣기 
 		
+		System.out.println("장소를 입력하십시오 >");
+		place= sc.nextLine().trim(); //타이틀에 스트링 입력 
+		
+		System.out.println("중요도를 입력하십시오 (*****)으로 >");
+		important= sc.nextLine().trim(); //타이틀에 스트링 입력 
+		
 		System.out.println("마감일을 입력하십시오 >");
 		due_date = sc.nextLine().trim(); 
 		
-		TodoItem t = new TodoItem(title, desc,category, due_date);  //투두아이템 타입의 티가 투두아이템 메소드 생성 
+		TodoItem t = new TodoItem(title, desc, category, due_date, place, important);  //투두아이템 타입의 티가 투두아이템 메소드 생성 
 		if(l.addItem(t) > 0) //리스트 에드아이템 메소드에 티 값을 실행..?
 			System.out.println("추가되었습니다");
 	}
@@ -67,23 +73,7 @@ public class TodoUtil {
 		int num =sc.nextInt();
 		
 		
-		/*for (TodoItem item : l.getList()) { 
-		if(num > l.getList().size()+1) {
-			System.out.println("없는 번호입니다. ");
-			
-			return;
-			
-		}
-		}
-		System.out.println((num) + ". " + l.getItem(num-1).toString());
 		
-		System.out.print("위 항목을 삭제하겠습니까? ");
-		String answer = sc.next();
-		if(answer.equals("y")) {
-			l.deleteItem(l.getItem(num-1));
-			System.out.println("삭제되었습니다.");
-		}
-		*/
 		if(l.deleteItem(num)>0)
 			System.out.println("삭제되었습니다. ");
 	}
@@ -110,10 +100,18 @@ public class TodoUtil {
 		System.out.println("새로운 내용을 입력하십시오. > "); //출력 
 		String new_desc = sc.nextLine().trim();  // 얘를 못받고 있네 지금...
 		
+		System.out.println("새 장소를 입력하십시오 >");
+		String new_place= sc.next().trim(); //장소추가 
+		
+		System.out.println("새 중요도를 입력하십시오 (*****)으로 >");
+		String new_important= sc.next().trim(); //중요도 추가  
+		
+		sc.nextLine(); 
+		
 		System.out.println("새 마감일 입력하시오 > "); 
 		String new_due_date = sc.nextLine().trim(); 
 		
-		TodoItem t = new TodoItem( new_title, new_desc,new_category, new_due_date);
+		TodoItem t = new TodoItem( new_title, new_desc,new_category, new_due_date,new_place,new_important);
 		t.setId(num);
 		System.out.print(l.updateItem(t));
 		
@@ -245,11 +243,10 @@ public class TodoUtil {
 			// TODO Auto-generated method stub
 			//Scanner sc = new Scanner(System.in);
 			
-			if(l.completeItem(value)>0)
-				for (TodoItem item : l.getCompList()) {  //TodoItem > String 으로 고치래 
-					System.out.println(item.toCompString());
-				}
-			System.out.println("완료하였습니다. ");
+			if(l.completeItem(value)>0) {
+				
+				System.out.println("완료하였습니다. ");
+			}
 			
 			
 		}
@@ -264,7 +261,56 @@ public class TodoUtil {
 				
 				
 		}
+		public static void listNotCompAll(TodoList l) { //수정 하기 
+			
+			System.out.println("[전체목록, 총" + l.getNotCompList().size() + "개]");
+								
+							
+			for (TodoItem item : l.getNotCompList()) {  //TodoItem > String 으로 고치래 
+						System.out.println(item.toNotCompString());
+			}
+				
+				
+		}
+	
+		public static void listPlace(TodoList l) {
+			
+			int count =0;
+			for(String item : l.getPlace()) {
+				System.out.println(item + " ");
+				count++;
+			}
+		
+		System.out.printf("\n총 %d개의 카테고리가 등록되어 있습니다. \n", count);
+	}
 
+		public static void findPlace(TodoList l,String word) {
+			// TODO Auto-generated method stub
+			int count = 0;
+			for (TodoItem item : l.getListPlace(word)) {  //TodoItem > String 으로 고치래 
+					System.out.println(item.toString());
+					count++;
+				
+			}	
+			System.out.printf("총 %d개의 항목을 찾았습니다.\n", count);
+			
+		}
+			
+		public static void listImport_Not(TodoList l,String impor) { //수정 하기 
+			
+			
+			System.out.println("[전체목록, 총" + l.getListImport_Notcomp(impor).size() + "개]");
+			
+			int count = 0;
+			for (TodoItem item : l.getListImport_Notcomp(impor)) { 
+				
+				System.out.println(item.toImpoNotCompString()); //수정 
+				//count++;
+			}
+			//System.out.printf("총 %d개의 항목을 찾았습니다.\n", count);
+			
+			
+		}
 	
 		
 }

@@ -23,7 +23,7 @@ public class TodoList {
 		this.conn = DbConnect.getConnection(); // 얘 클라스 있느데 왜 안ㅇ돼 
 	}
 	public int updateItem(TodoItem t) {
-		String sql = "update list set title =?, memo=?, category=?, current_date=?, due_date=?"
+		String sql = "update list set title =?, memo=?, category=?, current_date=?, due_date=?, place=?, important=?"
 					+ " where id = ?;";
 		PreparedStatement pstmt;
 		int count = 0;
@@ -34,7 +34,9 @@ public class TodoList {
 			pstmt.setString(3, t.getCategory());
 			pstmt.setString(4, t.getCurrent_date());
 			pstmt.setString(5, t.getDue_date());
-			pstmt.setInt(6, t.getId());
+			pstmt.setString(6, t.getPlace());
+			pstmt.setString(7, t.getImportant());
+			pstmt.setInt(8, t.getId());
 			count = pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -48,8 +50,8 @@ public class TodoList {
 	}
 	*/
 	public int addItem(TodoItem t) {
-		String sql = "insert into list (title, memo, category, current_date, due_date)"
-					+ " values (?,?,?,?,?);";
+		String sql = "insert into list (title, memo, category, current_date, due_date, place, important)"
+					+ " values (?,?,?,?,?,?,?);";
 		PreparedStatement pstmt;
 		int count = 0;
 		try {
@@ -59,6 +61,8 @@ public class TodoList {
 			pstmt.setString(3, t.getCategory());
 			pstmt.setString(4, t.getCurrent_date());
 			pstmt.setString(5, t.getDue_date());
+			pstmt.setString(6, t.getPlace());
+			pstmt.setString(7, t.getImportant());
 			count = pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -109,7 +113,9 @@ public class TodoList {
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(title, description, category, due_date);
+				String place= rs.getString("place");
+				String important= rs.getString("important");
+				TodoItem t = new TodoItem(title, description, category, due_date, place, important);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
@@ -142,7 +148,9 @@ public class TodoList {
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(title, description, category, due_date);
+				String place= rs.getString("place");
+				String important= rs.getString("important");
+				TodoItem t = new TodoItem(title, description, category, due_date,place, important);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
@@ -157,10 +165,10 @@ public class TodoList {
 		}
 		return list;
 	}
-	private void setString(int i, String word) {
+	/*private void setString(int i, String word) {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 	public void sortByName() {
 		//System.out.println("제목순으로 정렬하였습니다.");
 		Collections.sort(list, new TodoSortByName()); //정렬함수 리스o랑,comparator로 구현한 클래스의 인스턴스
@@ -258,6 +266,8 @@ public class TodoList {
 				String desc = st.nextToken();
 				String current_date = st.nextToken();
 				String due_date = st.nextToken();
+				String place= st.nextToken();
+				String important= st.nextToken();
 				
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, title);
@@ -265,6 +275,8 @@ public class TodoList {
 				pstmt.setString(3, category);
 				pstmt.setString(4, current_date);
 				pstmt.setString(5, due_date);
+				pstmt.setString(6,place);
+				pstmt.setString(7,important);
 				int count = pstmt.executeUpdate();
 				if(count > 0) records++;
 				pstmt.close();
@@ -317,8 +329,11 @@ public class TodoList {
 				String title = rs.getString("title");
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
-				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(title, description, category, due_date);
+				//String current_date = rs.getString("current_date");
+				String place = rs.getString("place");
+				String important= rs.getString("important");
+				
+				TodoItem t = new TodoItem(title, description, category, due_date,place, important);
 				list.add(t); //이부분 왜.... 
 			}
 			rs.close();
@@ -348,8 +363,10 @@ public class TodoList {
 				String title = rs.getString("title");
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
-				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(title, description, category, due_date);
+				//String current_date = rs.getString("current_date");
+				String place = rs.getString("place");
+				String important= rs.getString("important");
+				TodoItem t = new TodoItem(title, description, category, due_date, place, important);
 				list.add(t);
 			}
 			rs.close();
@@ -383,7 +400,7 @@ public class TodoList {
 		try {
 			String sql = "SELECT * FROM list WHERE is_completed=1";
 			pstmt = conn.prepareStatement(sql);
-			//pstmt.setInt(1, value);
+			
 			
 			ResultSet rs= pstmt.executeQuery();
 			while(rs.next()) {
@@ -393,8 +410,86 @@ public class TodoList {
 				String desc = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
+				String place = rs.getString("place");
+				String important = rs.getString("important");
 				int is_completed = rs.getInt("is_completed");
-				TodoItem t = new TodoItem(title, desc, category, due_date,is_completed); //todoitem 수정 
+				TodoItem t = new TodoItem(title, desc, category, due_date,is_completed,place, important); //todoitem 수정 
+				t.setId(id);
+				t.setCurrent_date(current_date);
+				
+				list.add(t);
+				
+				
+			}
+			rs.close();
+			pstmt.close();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public ArrayList<TodoItem> getNotCompList() {
+		// TODO Auto-generated method stub
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		PreparedStatement pstmt; //initialize 하라고해서 함!!! 
+		
+		try {
+			String sql = "SELECT * FROM list WHERE is_completed=0";
+			pstmt = conn.prepareStatement(sql);
+			
+			
+			ResultSet rs= pstmt.executeQuery();
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				String category = rs.getString("category");
+				String title = rs.getString("title");
+				String desc = rs.getString("memo");
+				String due_date = rs.getString("due_date");
+				String current_date = rs.getString("current_date");
+				String place = rs.getString("place");
+				String important = rs.getString("important");
+				int is_completed = rs.getInt("is_completed");
+				TodoItem t = new TodoItem(title, desc, category, due_date,is_completed,place, important); //todoitem 수정 
+				t.setId(id);
+				t.setCurrent_date(current_date);
+				
+				list.add(t);
+				
+				
+			}
+			rs.close();
+			pstmt.close();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public ArrayList<TodoItem> getListPlace(String word) {
+		// TODO Auto-generated method stub
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		PreparedStatement pstmt; //initialize 하라고해서 함!!! 
+		
+		try {
+			String sql = "SELECT * FROM list WHERE place = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, word);
+			//System.out.print(sql);
+
+			ResultSet rs= pstmt.executeQuery();
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				String category = rs.getString("category");
+				String title = rs.getString("title");
+				String desc = rs.getString("memo");
+				String due_date = rs.getString("due_date");
+				String current_date = rs.getString("current_date");
+				String place = rs.getString("place");
+				String important = rs.getString("important");
+				int is_completed = rs.getInt("is_completed");
+				TodoItem t = new TodoItem(title, desc, category, due_date,is_completed,place, important); //todoitem 수정 
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				//t.setIs_completed(is_completed);
@@ -410,7 +505,65 @@ public class TodoList {
 		}
 		return list;
 	}
+	public ArrayList<String> getPlace() {
+		// TODO Auto-generated method stub
+		ArrayList<String> list = new ArrayList<String>();
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+			String sql= "SELECT DISTINCT place FROM list";
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				
+				String place = rs.getString("place");
+			
+				list.add(place);
+			}
+			rs.close();
+			stmt.close();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	
+		public ArrayList<TodoItem> getListImport_Notcomp(String word) { //중요한데, 미완료한 목록정렬할 메소드! 
+
+			ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+			PreparedStatement pstmt; 
+			
+			try {
+				String sql = "SELECT title, memo, due_date, important, is_completed FROM list WHERE important = ? AND is_completed = 0;"; //select title, memo, due_date, case when important='****' then is_completed=0 end from list;
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, word);
+				
+				ResultSet rs= pstmt.executeQuery();
+				
+				while(rs.next()) {
+					
+					String title = rs.getString("title");
+					String desc = rs.getString("memo");
+					String due_date = rs.getString("due_date");
+					
+					String important = rs.getString("important");
+					int is_completed = rs.getInt("is_completed");
+					TodoItem t = new TodoItem(title, desc, due_date,is_completed, important); //todoitem 수정 
+					
+					list.add(t);
+		
+		
+				}
+				rs.close();
+				pstmt.close();
+	
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return list;
+		}
+		
 	
 }
-
 
